@@ -1,5 +1,12 @@
 # Amp-MIDI-Controller
 
+### Status
+- 1.) Hardware (✅)
+- 2.) Hardware Test (✅)
+- 3.) Software (❌)
+- 4.) 3D-Print-Body (✅)
+- 5.) Payment Plattform (❌)
+
 Amp-MIDI-Controller is a DIY build guide plus software for a flexible control module that lets you connect any MIDI foot controller to common guitar amp models and/or other MIDI interfaces using a simple configuration.
 
 A built-in Teach Mode allows you to quickly “learn” and map specific MIDI signals, route them to different targets, and even create chained actions (multiple commands triggered by a single footswitch press).
