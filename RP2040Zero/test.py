@@ -4,8 +4,9 @@ from ssd1306 import SSD1306
 
 # ---------- Pins ----------
 PIN_RELAY     = 29
-PIN_BTN_MAIN  = 7   # MainMomentary
-PIN_BTN_MENU  = 8   # MenuMomentary
+PIN_RELAY2    = 28
+PIN_BTN_MAIN  = 7
+PIN_BTN_MENU  = 8
 MIDI_IN_PIN   = 5
 MIDI_OUT_PIN  = 4
 
@@ -34,23 +35,26 @@ def oled_init():
     display.show()
     return display
 
-def oled_update(display, relay_on, main_pressed, menu_pressed):
+def oled_update(display, relay_on, relay2_on, main_pressed, menu_pressed):
     """Kurzer Status-Screen, um OLED im Lauf zu testen."""
     display.fill(0)
     display.text("OLED STATUS", 0, 0, 1)
-    display.text("Relay: %s" % ("ON" if relay_on else "OFF"), 0, 12, 1)
-    display.text("Main : %s" % ("DOWN" if main_pressed else "UP"), 0, 24, 1)
-    display.text("Menu : %s" % ("DOWN" if menu_pressed else "UP"), 0, 36, 1)
-    display.hline(0, 52, 128, 1)
-    display.text("MIDI IN/OUT OK", 0, 56, 1)
+    display.text("Relay1: %s" % ("ON" if relay_on else "OFF"), 0, 12, 1)
+    display.text("Relay2: %s" % ("ON" if relay2_on else "OFF"), 0, 24, 1)
+    display.text("Main : %s" % ("DOWN" if main_pressed else "UP"), 0, 36, 1)
+    display.text("Menu : %s" % ("DOWN" if menu_pressed else "UP"), 0, 48, 1)
     display.show()
 
 # ---------- Relais & Taster ----------
 relay = Pin(PIN_RELAY, Pin.OUT, value=0)
+relay2 = Pin(PIN_RELAY2, Pin.OUT, value=0)
 
-# Relais-Zustand in Variable halten
+# Relais-Zustände in Variablen halten
 relay_state = 0
 relay.value(relay_state)
+
+relay2_state = 0
+relay2.value(relay2_state)
 
 btn_main = Pin(PIN_BTN_MAIN, Pin.IN, Pin.PULL_UP)
 btn_menu = Pin(PIN_BTN_MENU, Pin.IN, Pin.PULL_UP)
@@ -142,14 +146,21 @@ except Exception as e:
     print("OLED init fehlgeschlagen:", e)
     oled = None
 
-# ---------- Hilfsfunktion Relais ----------
+# ---------- Hilfsfunktionen Relais ----------
 
 def set_relay(state):
-    """Relais-Zustand setzen (0/1) und global speichern."""
+    """Relais1-Zustand setzen (0/1) und global speichern."""
     global relay_state
     relay_state = 1 if state else 0
     relay.value(relay_state)
-    print("Relais", "EIN" if relay_state else "AUS")
+    print("Relais1", "EIN" if relay_state else "AUS")
+
+def set_relay2(state):
+    """Relais2-Zustand setzen (0/1) und global speichern."""
+    global relay2_state
+    relay2_state = 1 if state else 0
+    relay2.value(relay2_state)
+    print("Relais2", "EIN" if relay2_state else "AUS")
 
 # ---------- Main Loop ----------
 print("System bereit. Warte auf MIDI...")
@@ -157,7 +168,7 @@ print("System bereit. Warte auf MIDI...")
 while True:
     now = time.ticks_ms()
 
-    # ------- MainMomentary (btn_main): Toggle Relais -------
+    # ------- MainMomentary (btn_main): Toggle Relais1 -------
 
     val_main = btn_main.value()
     if val_main != prev_main:
@@ -176,7 +187,7 @@ while True:
                 # Taster losgelassen -> bereit für nächsten Toggle
                 main_pressed = False
 
-    # ------- MenuMomentary (btn_menu): noch ohne Relais-Funktion -------
+    # ------- MenuMomentary (btn_menu): Toggle Relais2 -------
 
     val_menu = btn_menu.value()
     if val_menu != prev_menu:
@@ -185,28 +196,26 @@ while True:
     else:
         if time.ticks_diff(now, last_menu_change) > DEBOUNCE_MS:
             if val_menu == 0 and not menu_pressed:
+                # Taster stabil gedrückt -> Relais2 toggeln
                 menu_pressed = True
-                print("Menu-Button gedrückt")
+                set_relay2(0 if relay2_state else 1)
             elif val_menu == 1 and menu_pressed:
+                # Taster losgelassen -> bereit für nächsten Toggle
                 menu_pressed = False
 
     # ------- MIDI einlesen & Thru -------
 
     n = uart.any()
     if n:
-        data = uart.read(n)  # mehrere Bytes auf einmal lesen
+        data = uart.read(n)
 
         for byte in data:
             parser.feed(byte)
-
-        # MIDI Thru: alles, was reingekommen ist, wieder rausschreiben
         uart.write(data)
 
     # ------- OLED Update -------
     if oled is not None and time.ticks_diff(now, last_oled_update) > OLED_UPDATE_MS:
         last_oled_update = now
-        oled_update(oled, relay_state, main_pressed, menu_pressed)
+        oled_update(oled, relay_state, relay2_state, main_pressed, menu_pressed)
 
-    # Kleine Pause, damit die CPU nicht 100 % läuft
     time.sleep_us(100)
-
