@@ -7,13 +7,8 @@ Demo is for Free, to use all Features buy Full Version
 <div align="left">
   <a href="https://www.nexosoft-engineering.de/amp/index.html">Full Version & Flashing</a>
 </div
-  
-### Status
-- 1.) Hardware (✅)
-- 2.) Hardware Test (✅)
-- 3.) Software (✅)
-- 4.) 3D-Print-Body (✅)
-- 5.) Payment Plattform (✅)
+
+
 
 Amp-MIDI-Controller is a DIY build guide plus software for a flexible control module that lets you connect any MIDI foot controller to common guitar amp models and/or other MIDI interfaces using a simple configuration.
 
@@ -39,3 +34,12 @@ An integrated display lets you select amp models and channels and makes it easy 
 2. Simple configuration for amps and other MIDI devices
 3. Teach Mode for learning/mapping MIDI messages
 4. MIDI routing & distribution across multiple outputs
+
+
+
+### Status
+- 1.) Hardware (✅)
+- 2.) Hardware Test (✅)
+- 3.) Software (✅)
+- 4.) 3D-Print-Body (✅)
+- 5.) Payment Plattform (✅)
