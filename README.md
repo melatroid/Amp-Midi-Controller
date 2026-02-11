@@ -1,5 +1,13 @@
 # Amp-MIDI-Controller
 
+# Demo Version for Free
+Demo is for Free, to use all Features buy Full Version
+
+# Pro & Flashing Tool for 2040 Zero here...
+<div align="left">
+  <a href="https://www.nexosoft-engineering.de/amp/index.html">Full Version & Flashing</a>
+</div
+  
 ### Status
 - 1.) Hardware (✅)
 - 2.) Hardware Test (✅)
