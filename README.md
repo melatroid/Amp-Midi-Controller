@@ -1,14 +1,9 @@
 # Amp-MIDI-Controller
 
-# Demo Version for Free
-Demo is for Free, to use all Features buy Full Version
-
-# Pro & Flashing Tool for 2040 Zero here...
+Files & Flashing Tool for 2040 Zero here...
 <div align="left">
   <a href="https://www.nexosoft-engineering.de/amp/index.html">Full Version & Flashing</a>
 </div
-
-
 
 Amp-MIDI-Controller is a DIY build guide plus software for a flexible control module that lets you connect any MIDI foot controller to common guitar amp models and/or other MIDI interfaces using a simple configuration.
 
